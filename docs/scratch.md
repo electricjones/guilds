@@ -9,3 +9,14 @@
 
 # Later
 - Break this into multiple libraries, with this one being not a binary application
+
+# Cycle
+- Setup `Scenario` and `Players`
+- Initialize `State`
+  - Randomize the playfield
+  - Setup the Market
+  - Deal the Hands
+- Start the Game
+- Player Action
+  - Play Card `card.play()`
+  - Discard `card.discard()`

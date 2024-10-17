@@ -1,0 +1,35 @@
+{
+  players: [
+    {
+      character: "Pippin",
+      guild: "Mage",
+      points: 0,
+      charms: [],
+      silver: 8,
+    }
+  ],
+
+  // 6 x 4 grid of stacks of 3
+  // Each card is an Enum with a state (up or down), some number of chits, a guild, and the Card Object (with methods)
+  playfield: [
+    [12, 9, 7, "G"], [13, 8, 17, "G"], [6, 10, 37, "G"], [77, 1, 18], [67, 83, 82], [61, 11, 13],
+    [12, 9, 7, "G"], [13, 8, 17, "G"], [6, 10, 37, "G"], [77, 1, 18], [67, 83, 82], [61, 11, 13],
+    [12, 9, 7, "G"], [13, 8, 17, "G"], [6, 10, 37, "G"], [77, 1, 18], [67, 83, 82], [61, 11, 13],
+    [12, 9, 7, "G"], [13, 8, 17, "G"], [6, 10, 37, "G"], [77, 1, 18], [67, 83, 82], [61, 11, 13]
+  ],
+  round: 3,
+  wishes: [
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight"
+  ],
+  market: {
+    trinkets: [],
+    charms: [],
+  },
+}
