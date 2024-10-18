@@ -1,21 +1,24 @@
 use std::collections::HashMap;
-use derive_builder::Builder;
 
 mod board;
 mod players;
 mod market;
 mod points;
 
-#[derive(Builder, Debug, Clone)]
-#[builder(setter(into))]
+#[derive(TypedBuilder, Debug, Clone)]
 pub struct State {
     // players: String,
     // playfield: Playfield,
     // market: String,
-    // wishes: String,
+    // wishes: String
+    #[builder(default=1)]
     round: i32,
+
     players: HashMap<PlayerId, Player>,
     player_order: PlayerOrder,
+
+    /// Should be the first player in the play order
+    // TODO: Shouldn't need to set this explicitly
     active_player: PlayerId,
 }
 
@@ -50,7 +53,7 @@ impl State {
 
 type PlayerId = u8;
 
-#[derive(Builder, Debug, Clone)]
+#[derive(TypedBuilder, Debug, Clone)]
 pub struct Player {
     name: String,
     id: u8,
@@ -75,11 +78,12 @@ impl Player {
 }
 
 use std::collections::VecDeque;
+use typed_builder::TypedBuilder;
 
 // TODO: Move this to its own module
 // TODO: Test all these From's
 // TODO: I may need that last FROM
-#[derive(Builder, Debug, Clone)]
+#[derive(TypedBuilder, Debug, Clone)]
 pub struct PlayerOrder {
     order: VecDeque<PlayerId>,
     current_index: usize,

@@ -1,7 +1,7 @@
 use maplit::hashmap;
 use std::io::{self, Write};
 use std::str::FromStr;
-use crate::state::{PlayerBuilder, PlayerOrder, StateBuilder};
+use crate::state::{Player, PlayerBuilder, PlayerOrder, State, StateBuilder};
 
 mod cards;
 mod state;
@@ -34,22 +34,25 @@ impl From<&str> for Commands {
 }
 
 fn main() {
+    // Create the players
     let players = hashmap! {
-        1 => PlayerBuilder::default().name("Michael".into()).id(1).build().unwrap(),
-        2 => PlayerBuilder::default().name("James".into()).id(2).build().unwrap(),
-        3 => PlayerBuilder::default().name("Lori".into()).id(3).build().unwrap(),
+        1 => Player::builder().name("Michael".into()).id(1).build(),
+        2 => Player::builder().name("James".into()).id(2).build(),
+        3 => Player::builder().name("Lori".into()).id(3).build(),
     };
 
-    let mut state = StateBuilder::default()
+    // Initialize the state
+    let mut state = State::builder()
         .round(1)
         .players(players)
-        .player_order::<PlayerOrder>([2, 1, 3].into())
+        .player_order([2, 1, 3].into())
         .active_player(2)
-        .build().unwrap();
+        .build();
 
     // This is just my attempt to manage player order in the most basic way possible.
     // This is not at all the real input scheme. Just a few stupid commands to test some ideas
 
+    // Run the game loop
     loop {
         let active_player_id = match state.player_order_mut().next() {
             None => {
@@ -86,7 +89,7 @@ fn main() {
                 Commands::E => println!("Player '{}' entered command: E", active_player.name()),
                 Commands::F => println!("Player '{}' entered command: F", active_player.name()),
                 Commands::Unknown => {
-                    println!("Invalid command. Please enter one of {:?}", commands);
+                    println!("Invalid command. Please enter one of A-F");
                     continue;
                 }
             }
