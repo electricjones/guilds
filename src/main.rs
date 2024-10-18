@@ -1,12 +1,12 @@
+use crate::state::{Player, State};
 use maplit::hashmap;
 use std::io::{self, Write};
 use std::str::FromStr;
-use crate::state::{Player, PlayerBuilder, PlayerOrder, State, StateBuilder};
 
 mod cards;
-mod state;
-mod players;
 mod characters;
+mod players;
+mod state;
 mod ui;
 
 enum Commands {
@@ -34,6 +34,12 @@ impl From<&str> for Commands {
 }
 
 fn main() {
+    // TODO: Next   - Create Cards and play cards from the command. Cards mutate state
+    //              - Card is an enum with the type (Wish, Charm, Market, Discovery, etc) and a struct with the type
+    //              - All cards implement a `Playable` trait that can mutate on the state
+    //       Then   - Load the cards from rhai scripts
+    //              - Mutating the state will (eventually) notify subscribers for reactions
+
     // Create the players
     let players = hashmap! {
         1 => Player::builder().name("Michael".into()).id(1).build(),
@@ -63,7 +69,7 @@ fn main() {
 
                 continue;
             }
-            Some(player_id) => player_id
+            Some(player_id) => player_id,
         };
 
         let active_player = &state.players()[&active_player_id];
