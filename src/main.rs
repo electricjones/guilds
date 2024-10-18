@@ -1,5 +1,6 @@
-use crate::state::{Player, State};
+use crate::state::State;
 use maplit::hashmap;
+use state::players::Player;
 use std::io::{self, Write};
 use std::str::FromStr;
 
