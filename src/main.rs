@@ -1,3 +1,5 @@
+use crate::cards::discoveries::{traitor, Discovery};
+use crate::cards::Playable;
 use crate::state::State;
 use maplit::hashmap;
 use state::players::Player;
@@ -89,7 +91,15 @@ fn main() {
             let command: Commands = input.into();
 
             match command {
-                Commands::A => println!("Player '{}' entered command: A", active_player.name()),
+                Commands::A => {
+                    println!("Playing a card");
+                    let mut card = Discovery {
+                        callable: Box::new(traitor),
+                    };
+
+                    card.play(&mut state).unwrap();
+                    let _ = false;
+                }
                 Commands::B => println!("Player '{}' entered command: B", active_player.name()),
                 Commands::C => println!("Player '{}' entered command: C", active_player.name()),
                 Commands::D => println!("Player '{}' entered command: D", active_player.name()),
