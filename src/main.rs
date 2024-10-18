@@ -1,5 +1,6 @@
 use maplit::hashmap;
 use std::io::{self, Write};
+use std::str::FromStr;
 use crate::state::{PlayerBuilder, PlayerOrder, StateBuilder};
 
 mod cards;
@@ -7,6 +8,30 @@ mod state;
 mod players;
 mod characters;
 mod ui;
+
+enum Commands {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    Unknown,
+}
+
+impl From<&str> for Commands {
+    fn from(value: &str) -> Self {
+        match value {
+            "a" | "A" => Commands::A,
+            "b" | "B" => Commands::B,
+            "c" | "C" => Commands::C,
+            "d" | "D" => Commands::D,
+            "e" | "E" => Commands::E,
+            "f" | "F" => Commands::F,
+            _ => Commands::Unknown,
+        }
+    }
+}
 
 fn main() {
     let players = hashmap! {
@@ -24,8 +49,6 @@ fn main() {
 
     // This is just my attempt to manage player order in the most basic way possible.
     // This is not at all the real input scheme. Just a few stupid commands to test some ideas
-    // TODO: These will just be silly little testing commands
-    let commands = vec!["a", "b", "c", "d"];
 
     loop {
         let active_player_id = match state.player_order_mut().next() {
@@ -43,7 +66,7 @@ fn main() {
         let active_player = &state.players()[&active_player_id];
 
         println!("Active Player: {}", active_player.name());
-        println!("Acceptable commands: {:?}", commands);
+        println!("Acceptable commands: A-F");
 
         loop {
             print!("Enter command: ");
@@ -53,15 +76,22 @@ fn main() {
             io::stdin().read_line(&mut input).unwrap();
             let input = input.trim();
 
-            if commands.contains(&input) {
-                println!("Player '{}' entered command: {}", active_player.name(), input);
+            let command: Commands = input.into();
 
-                // And whatever else needs to happen here to handle the command
-
-                break;
-            } else {
-                println!("Invalid command. Please enter one of {:?}", commands);
+            match command {
+                Commands::A => println!("Player '{}' entered command: A", active_player.name()),
+                Commands::B => println!("Player '{}' entered command: B", active_player.name()),
+                Commands::C => println!("Player '{}' entered command: C", active_player.name()),
+                Commands::D => println!("Player '{}' entered command: D", active_player.name()),
+                Commands::E => println!("Player '{}' entered command: E", active_player.name()),
+                Commands::F => println!("Player '{}' entered command: F", active_player.name()),
+                Commands::Unknown => {
+                    println!("Invalid command. Please enter one of {:?}", commands);
+                    continue;
+                }
             }
+
+            break;
         }
     }
 }
