@@ -37,11 +37,9 @@ impl From<&str> for Commands {
 }
 
 fn main() {
-    // TODO: Next   - Create Cards and play cards from the command. Cards mutate state
-    //              - Card is an enum with the type (Wish, Charm, Market, Discovery, etc) and a struct with the type
-    //              - All cards implement a `Playable` trait that can mutate on the state
-    //       Then   - Load the cards from rhai scripts
-    //              - Mutating the state will (eventually) notify subscribers for reactions
+    // TODO: Next - Load the cards from rhai scripts
+    //       Then - Initial State of Board (playfield with discovery cards
+    //            - Mutating the state will (eventually) notify subscribers for reactions
 
     // Create the players
     let players = hashmap! {

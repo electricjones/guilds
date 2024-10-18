@@ -22,3 +22,8 @@ enum Cards {
     // Charm(Charm),
     // Trinket(Trinket),
 }
+
+pub struct Cost {
+    silver: u8,
+    ingredients: u8,
+}
