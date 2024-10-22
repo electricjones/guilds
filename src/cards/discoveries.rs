@@ -1,6 +1,8 @@
 use crate::cards::{Cost, Eligibility, Playable};
 use crate::state::State;
+use typed_builder::TypedBuilder;
 
+#[derive(TypedBuilder, Debug)]
 pub struct Discovery {
     id: u8,
     count: u8,
@@ -14,8 +16,8 @@ pub struct Discovery {
 }
 
 impl Playable for Discovery {
-    fn eligibility(&self, state: &State) -> Eligibility {
-        (self.eligible)(state)
+    fn eligibility(&self, state: State) -> Eligibility {
+        (self.eligible)(&state)
     }
 
     fn play(&mut self, state: &mut State) -> Result<String, String> {

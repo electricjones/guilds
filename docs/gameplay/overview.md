@@ -2,6 +2,7 @@
 A high fantasy, asymetrical, strategic struggle between rival guilds using deck builder and area control mechanics. Aesthetic similar to Unstable Unicorns. Inspired by Clank, Twilight Imperium, and Root.
 
 Exact theme not determined. Maybe Pepper and Carrot.
+
 ## Guilds and Characters
 Guilds are the core thematic and mechanical grouping of the game and they influence everything. The different guilds have different play styles, themes, and types of effects.
 

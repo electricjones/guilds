@@ -1,4 +1,4 @@
-use crate::cards::discoveries::{traitor, Discovery};
+use crate::cards::discoveries::Discovery;
 use crate::cards::Playable;
 use crate::state::State;
 use maplit::hashmap;
@@ -8,9 +8,15 @@ use std::str::FromStr;
 
 mod cards;
 mod characters;
+mod decks;
 mod players;
 mod state;
 mod ui;
+mod utilities;
+
+// TODO: Start Here -|
+//  - Build 3 Player's with a starting deck of Trinkets
+//  - Cycle through a regular deck building game
 
 enum Commands {
     A,
@@ -42,6 +48,7 @@ fn main() {
     //            - Mutating the state will (eventually) notify subscribers for reactions
 
     // Create the players
+    // TODO: Create Players more organically
     let players = hashmap! {
         1 => Player::builder().name("Michael".into()).id(1).build(),
         2 => Player::builder().name("James".into()).id(2).build(),
@@ -49,6 +56,7 @@ fn main() {
     };
 
     // Initialize the state
+    // Create state from Players, Scenario, ect
     let mut state = State::builder()
         .round(1)
         .players(players)
@@ -61,6 +69,7 @@ fn main() {
 
     // Run the game loop
     loop {
+        // TODO: I think this will start with Player 2
         let active_player_id = match state.player_order_mut().next() {
             None => {
                 // If we have finished this round, move to the next and start again
@@ -91,9 +100,7 @@ fn main() {
             match command {
                 Commands::A => {
                     println!("Playing a card");
-                    let mut card = Discovery {
-                        callable: Box::new(traitor),
-                    };
+                    let mut card = Discovery::builder().id(7).count(27).build();
 
                     card.play(&mut state).unwrap();
                     let _ = false;

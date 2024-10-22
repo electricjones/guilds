@@ -1,12 +1,14 @@
+use crate::decks::player::PlayerDeck;
 use std::collections::VecDeque;
 use typed_builder::TypedBuilder;
 
 pub type PlayerId = u8;
 
-#[derive(TypedBuilder, Debug, Clone)]
+#[derive(TypedBuilder, Debug)]
 pub struct Player {
     name: String,
     id: u8,
+    deck: PlayerDeck,
 }
 
 impl Player {
@@ -71,7 +73,7 @@ impl PlayerOrder {
         }
     }
 
-    pub fn next(&mut self) -> Option<PlayerId> {
+    pub fn current(&mut self) -> Option<PlayerId> {
         if self.order.is_empty() {
             return None;
         }
@@ -82,7 +84,22 @@ impl PlayerOrder {
         }
 
         let player_id = self.order[self.current_index];
+        Some(player_id)
+    }
+
+    pub fn next(&mut self) -> Option<PlayerId> {
+        if self.order.is_empty() {
+            return None;
+        }
+
         self.current_index += 1;
+
+        if self.current_index >= self.order.len() {
+            self.current_index = 0;
+            return None;
+        }
+
+        let player_id = self.order[self.current_index];
 
         Some(player_id)
     }

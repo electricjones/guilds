@@ -16,13 +16,15 @@ pub trait Playable {
     fn play(&mut self, state: &mut State) -> Result<String, String>;
 }
 
-enum Cards {
+#[derive(Debug)]
+pub enum Cards {
     Discovery(Discovery),
     // Wish(Wish),
     // Charm(Charm),
     // Trinket(Trinket),
 }
 
+#[derive(Debug)]
 pub struct Cost {
     silver: u8,
     ingredients: u8,
