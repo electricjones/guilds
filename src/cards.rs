@@ -11,11 +11,14 @@ enum Eligibility {
     NotEligible,
     // What others?
 }
+
+type PlayableAction = Box<dyn FnMut(&mut State) -> Result<String, String>>;
+
 pub trait Playable {
     fn eligibility(&self, state: State) -> Eligibility;
 
-    // TODO: Return better results
-    fn play(&mut self, state: &mut State) -> Result<String, String>;
+    // fn play(&mut self, state: &mut State) -> Result<String, String>;
+    fn play(&self) -> Vec<PlayableAction>;
 }
 
 #[derive(Debug)]
@@ -24,6 +27,21 @@ pub enum Cards {
     // Wish(Wish),
     // Charm(Charm),
     Trinket(Trinket),
+}
+
+impl Playable for Cards {
+    fn eligibility(&self, _state: State) -> Eligibility {
+        Eligibility::Eligible
+        // TODO: Similar to play()
+    }
+
+    fn play(&self) -> Vec<PlayableAction> {
+        // TODO: I probably don't need this match statement since they all implement Playable
+        match self {
+            Cards::Discovery(discovery) => discovery.play(),
+            Cards::Trinket(trinkets) => trinkets.play(),
+        }
+    }
 }
 
 #[derive(Debug)]

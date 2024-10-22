@@ -112,7 +112,7 @@ impl PlayerOrder {
         self.current_index = 0;
     }
 
-    pub fn set_order(&mut self, new_order: Vec<PlayerId>, new_round: u32) {
+    pub fn set_order(&mut self, new_order: Vec<PlayerId>, _new_round: u32) {
         self.order = new_order.into_iter().collect();
         self.current_index = 0;
     }

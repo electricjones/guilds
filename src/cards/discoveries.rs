@@ -1,4 +1,4 @@
-use crate::cards::{Cost, Eligibility, Playable};
+use crate::cards::{Cost, Eligibility, Playable, PlayableAction};
 use crate::state::State;
 use std::fmt;
 use typed_builder::TypedBuilder;
@@ -31,16 +31,16 @@ impl fmt::Debug for Discovery {
 }
 
 impl Playable for Discovery {
-    fn eligibility(&self, state: State) -> Eligibility {
-        (self.eligible)(&state)
+    fn eligibility(&self, _state: State) -> Eligibility {
+        todo!()
     }
 
-    fn play(&mut self, state: &mut State) -> Result<String, String> {
-        (self.callable)(state)
+    fn play(&self) -> Vec<PlayableAction> {
+        todo!()
     }
 }
 
-pub fn traitor(state: &mut State) -> Result<String, String> {
-    state.increment_round();
-    Ok(String::from("Done"))
-}
+// pub fn traitor(state: &mut State) -> Result<String, String> {
+//     state.increment_round();
+//     Ok(String::from("Done"))
+// }

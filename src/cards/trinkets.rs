@@ -1,4 +1,4 @@
-use crate::cards::{Eligibility, Playable};
+use crate::cards::{Eligibility, Playable, PlayableAction};
 use crate::state::State;
 
 #[derive(Debug)]
@@ -15,13 +15,26 @@ impl Trinket {
 }
 
 impl Playable for Trinket {
-    fn eligibility(&self, state: State) -> Eligibility {
+    fn eligibility(&self, _state: State) -> Eligibility {
         Eligibility::Eligible
     }
 
-    fn play(&mut self, state: &mut State) -> Result<String, String> {
-        println!("Playing {}", self.name);
-        state.debug().push(self.name.clone());
-        Ok(String::from("Done"))
+    fn play(&self) -> Vec<PlayableAction> {
+        // TODO: Not sure how happy I am with this setup, but I think its working
+        let name_clone = self.name.clone();
+        let name_clone2 = self.name.clone();
+
+        vec![
+            Box::new(move |state| {
+                println!("Trinket action 1 for {}", name_clone);
+                state.increment_round();
+                Ok(String::from("good".to_string()))
+            }),
+            Box::new(move |state| {
+                println!("Trinket action 2 for {}", name_clone2);
+                state.increment_round();
+                Ok(String::from("good2"))
+            }),
+        ]
     }
 }

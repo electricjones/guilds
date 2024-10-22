@@ -11,9 +11,6 @@ pub mod points;
 //      - Generations, revisions, watchers, etc
 #[derive(TypedBuilder, Debug)]
 pub struct State {
-    // playfield: Playfield,
-    // market: String,
-    // wishes: String
     #[builder(default = 1)]
     round: i32,
 
