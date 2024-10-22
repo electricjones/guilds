@@ -23,22 +23,13 @@ impl From<CardStack> for PlayerDeck {
 
 impl PlayerDeck {
     // TODO: This may be able to be abstracted to a trait
-    pub fn draw(&mut self, number: usize) -> Result<Vec<Cards>, String> {
-        let mut drawn_cards = Vec::new();
-
-        for _ in 0..number {
-            if self.deck.is_empty() {
-                self.cycle();
-                if self.deck.is_empty() {
-                    return Err("Did not have enough cards".into());
-                }
-            }
-            if let Some(card) = self.deck.pop() {
-                drawn_cards.push(card);
-            }
+    pub fn draw(&mut self, count: usize) -> Result<&mut [Cards], String> {
+        // If we don't have enough, cycle first
+        if self.deck.len() < count {
+            self.cycle();
         }
 
-        Ok(drawn_cards)
+        Ok(&mut self.deck[0..count])
     }
 
     pub fn discard(&mut self, index: usize) -> Result<(), String> {

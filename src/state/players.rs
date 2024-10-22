@@ -27,6 +27,10 @@ impl Player {
     pub fn set_name<T: Into<String>>(&mut self, name: T) {
         self.name = name.into();
     }
+
+    pub fn deck(&mut self) -> &mut PlayerDeck {
+        &mut self.deck
+    }
 }
 
 // TODO: Move this to its own module

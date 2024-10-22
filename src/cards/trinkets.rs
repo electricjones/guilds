@@ -7,7 +7,7 @@ pub struct Trinket {
 }
 
 impl Trinket {
-    pub(crate) fn new(name: &str) -> Trinket {
+    pub fn new(name: &str) -> Trinket {
         Trinket {
             name: name.to_string(),
         }

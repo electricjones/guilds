@@ -51,7 +51,7 @@ impl State {
         &mut self.player_order
     }
 
-    pub fn players(&self) -> &HashMap<PlayerId, Player> {
-        &self.players
+    pub fn players(&mut self) -> &mut HashMap<PlayerId, Player> {
+        &mut self.players
     }
 }

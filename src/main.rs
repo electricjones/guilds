@@ -5,7 +5,6 @@ use crate::state::State;
 use maplit::hashmap;
 use state::players::Player;
 use std::io::{self, Write};
-use std::str::FromStr;
 
 mod cards;
 mod characters;
@@ -121,7 +120,36 @@ fn main() {
 
             match command {
                 Commands::A => {
-                    println!("Playing a card");
+                    let drawn = {
+                        let player = state.players().get_mut(&active_player_id).unwrap();
+                        let d = player.deck();
+                        d.draw(2).unwrap()
+                    };
+
+                    let mut discard_indices = Vec::new();
+
+                    for (index, card) in drawn.iter_mut().enumerate() {
+                        match card {
+                            Cards::Discovery(_) => {
+                                println!("wrong")
+                            }
+                            Cards::Trinket(ref mut trinket) => {
+                                trinket.play(&mut state).unwrap();
+                                discard_indices.push(index);
+                            }
+                        }
+                    }
+
+                    {
+                        let player = state.players().get_mut(&active_player_id).unwrap();
+                        let d = player.deck();
+                        for &index in &discard_indices {
+                            d.discard(index).unwrap();
+                        }
+                        d.cycle();
+                    }
+
+                    let me = false;
                 }
                 Commands::B => println!("Player '{}' entered command: B", active_player.name()),
                 Commands::C => println!("Player '{}' entered command: C", active_player.name()),
