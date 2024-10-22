@@ -1,5 +1,6 @@
-use crate::cards::discoveries::Discovery;
-use crate::cards::Playable;
+use crate::cards::trinkets::Trinket;
+use crate::cards::{Cards, Playable};
+use crate::decks::player::PlayerDeck;
 use crate::state::State;
 use maplit::hashmap;
 use state::players::Player;
@@ -43,16 +44,36 @@ impl From<&str> for Commands {
 }
 
 fn main() {
-    // TODO: Next - Load the cards from rhai scripts
-    //       Then - Initial State of Board (playfield with discovery cards
-    //            - Mutating the state will (eventually) notify subscribers for reactions
-
     // Create the players
     // TODO: Create Players more organically
+    let michael_cards = PlayerDeck::from(vec![
+        Cards::Trinket(Trinket::new("Warrior")),
+        Cards::Trinket(Trinket::new("Monk")),
+        Cards::Trinket(Trinket::new("Cleric")),
+        Cards::Trinket(Trinket::new("Minister")),
+        Cards::Trinket(Trinket::new("Merchant")),
+    ]);
+
+    let james_card = PlayerDeck::from(vec![
+        Cards::Trinket(Trinket::new("Warrior2")),
+        Cards::Trinket(Trinket::new("Monk2")),
+        Cards::Trinket(Trinket::new("Cleric2")),
+        Cards::Trinket(Trinket::new("Minister2")),
+        Cards::Trinket(Trinket::new("Merchant2")),
+    ]);
+
+    let lori_cards = PlayerDeck::from(vec![
+        Cards::Trinket(Trinket::new("Warrior3")),
+        Cards::Trinket(Trinket::new("Monk3")),
+        Cards::Trinket(Trinket::new("Cleric3")),
+        Cards::Trinket(Trinket::new("Minister3")),
+        Cards::Trinket(Trinket::new("Merchant3")),
+    ]);
+
     let players = hashmap! {
-        1 => Player::builder().name("Michael".into()).id(1).build(),
-        2 => Player::builder().name("James".into()).id(2).build(),
-        3 => Player::builder().name("Lori".into()).id(3).build(),
+        1 => Player::builder().name("Michael".into()).id(1).deck(michael_cards).build(),
+        2 => Player::builder().name("James".into()).id(2).deck(james_card).build(),
+        3 => Player::builder().name("Lori".into()).id(3).deck(lori_cards).build(),
     };
 
     // Initialize the state
@@ -62,6 +83,7 @@ fn main() {
         .players(players)
         .player_order([2, 1, 3].into())
         .active_player(2)
+        .debug(Vec::new())
         .build();
 
     // This is just my attempt to manage player order in the most basic way possible.
@@ -100,10 +122,6 @@ fn main() {
             match command {
                 Commands::A => {
                     println!("Playing a card");
-                    let mut card = Discovery::builder().id(7).count(27).build();
-
-                    card.play(&mut state).unwrap();
-                    let _ = false;
                 }
                 Commands::B => println!("Player '{}' entered command: B", active_player.name()),
                 Commands::C => println!("Player '{}' entered command: C", active_player.name()),

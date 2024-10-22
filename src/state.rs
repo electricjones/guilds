@@ -9,13 +9,15 @@ pub mod points;
 
 // TODO: This will eventually track
 //      - Generations, revisions, watchers, etc
-#[derive(TypedBuilder, Debug, Clone)]
+#[derive(TypedBuilder, Debug)]
 pub struct State {
     // playfield: Playfield,
     // market: String,
     // wishes: String
     #[builder(default = 1)]
     round: i32,
+
+    debug: Vec<String>,
 
     players: HashMap<PlayerId, Player>,
     player_order: PlayerOrder,
@@ -35,6 +37,10 @@ impl State {
 
     pub fn round(&self) -> i32 {
         self.round
+    }
+
+    pub fn debug(&mut self) -> &mut Vec<String> {
+        &mut self.debug
     }
 
     pub fn player_order(&self) -> &PlayerOrder {

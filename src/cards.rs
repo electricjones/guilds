@@ -1,7 +1,9 @@
 use crate::cards::discoveries::Discovery;
+use crate::cards::trinkets::Trinket;
 use crate::state::State;
 
 pub mod discoveries;
+pub mod trinkets;
 pub mod wishes;
 
 enum Eligibility {
@@ -21,7 +23,7 @@ pub enum Cards {
     Discovery(Discovery),
     // Wish(Wish),
     // Charm(Charm),
-    // Trinket(Trinket),
+    Trinket(Trinket),
 }
 
 #[derive(Debug)]
