@@ -16,7 +16,7 @@ pub struct State {
     #[builder(default = 1)]
     round: i32,
 
-    debug: Vec<String>,
+    debug: i32,
 
     players: HashMap<PlayerId, Player>,
     player_order: PlayerOrder,
@@ -38,8 +38,8 @@ impl State {
         self.round
     }
 
-    pub fn debug(&mut self) -> &mut Vec<String> {
-        &mut self.debug
+    pub fn debug(&mut self) {
+        self.debug += 1;
     }
 
     pub fn player_order(&self) -> &PlayerOrder {

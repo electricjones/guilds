@@ -39,7 +39,7 @@ impl Player {
 #[derive(TypedBuilder, Debug, Clone)]
 pub struct PlayerOrder {
     order: VecDeque<PlayerId>,
-    current_index: usize,
+    current_index: i8,
 }
 
 impl From<Vec<PlayerId>> for PlayerOrder {
@@ -53,19 +53,13 @@ impl From<Vec<PlayerId>> for PlayerOrder {
 
 impl<const N: usize> From<[PlayerId; N]> for PlayerOrder {
     fn from(order: [PlayerId; N]) -> Self {
-        PlayerOrder {
-            order: order.into_iter().collect(),
-            current_index: 0,
-        }
+        PlayerOrder::new(order.into_iter().collect())
     }
 }
 
 impl From<&[PlayerId]> for PlayerOrder {
     fn from(order: &[PlayerId]) -> Self {
-        PlayerOrder {
-            order: order.into_iter().copied().collect(),
-            current_index: 0,
-        }
+        PlayerOrder::new(order.into_iter().copied().collect())
     }
 }
 
@@ -73,22 +67,10 @@ impl PlayerOrder {
     pub fn new(order: Vec<PlayerId>) -> Self {
         PlayerOrder {
             order: order.into_iter().collect(),
-            current_index: 0,
+            // TODO: Not sure I like starting at -1, but I think its okay for now.
+            //       - this is the best way to ensure we start at player 1 in the first round
+            current_index: -1,
         }
-    }
-
-    pub fn current(&mut self) -> Option<PlayerId> {
-        if self.order.is_empty() {
-            return None;
-        }
-
-        if self.current_index >= self.order.len() {
-            self.current_index = 0;
-            return None;
-        }
-
-        let player_id = self.order[self.current_index];
-        Some(player_id)
     }
 
     pub fn next(&mut self) -> Option<PlayerId> {
@@ -98,12 +80,12 @@ impl PlayerOrder {
 
         self.current_index += 1;
 
-        if self.current_index >= self.order.len() {
-            self.current_index = 0;
+        if self.current_index as usize >= self.order.len() {
+            self.current_index = -1;
             return None;
         }
 
-        let player_id = self.order[self.current_index];
+        let player_id = self.order[self.current_index as usize];
 
         Some(player_id)
     }

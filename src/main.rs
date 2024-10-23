@@ -78,7 +78,7 @@ fn main() {
         .players(players)
         .player_order([2, 1, 3].into())
         .active_player(2)
-        .debug(Vec::new())
+        .debug(0)
         .build();
 
     // This is just my attempt to manage player order in the most basic way possible.
@@ -86,7 +86,6 @@ fn main() {
 
     // Run the game loop
     loop {
-        // TODO: I think this will start with Player 2
         let active_player_id = match state.player_order_mut().next() {
             None => {
                 // If we have finished this round, move to the next and start again

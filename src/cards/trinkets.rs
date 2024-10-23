@@ -27,12 +27,12 @@ impl Playable for Trinket {
         vec![
             Box::new(move |state| {
                 println!("Trinket action 1 for {}", name_clone);
-                state.increment_round();
+                state.debug();
                 Ok(String::from("good".to_string()))
             }),
             Box::new(move |state| {
                 println!("Trinket action 2 for {}", name_clone2);
-                state.increment_round();
+                state.debug();
                 Ok(String::from("good2"))
             }),
         ]
