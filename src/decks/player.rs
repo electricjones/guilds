@@ -35,6 +35,10 @@ impl PlayerDeck {
         Err(String::from("Card not found"))
     }
 
+    pub fn hand(&mut self) -> Vec<usize> {
+        self.draw.iter().cloned().collect()
+    }
+
     pub fn draw(&mut self, count: usize) -> Result<Vec<usize>, String> {
         // If we don't have enough, cycle first
         if self.deck.len() < count {

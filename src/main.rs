@@ -1,9 +1,11 @@
 use crate::cards::trinkets::Trinket;
-use crate::cards::{Cards, Playable};
+use crate::cards::Cards;
 use crate::decks::player::PlayerDeck;
 use crate::state::State;
 use maplit::hashmap;
 use state::players::Player;
+use std::io;
+use std::io::Write;
 
 mod cards;
 mod characters;
@@ -79,119 +81,99 @@ fn main() {
         .debug(Vec::new())
         .build();
 
-    let active_player_id = 1;
-
-    let deck = state.player_deck(active_player_id).unwrap();
-    println!("Starting: {:#?}", deck);
-
-    // Draw 3 cards
-    let hand = deck.draw(3).unwrap();
-    println!("First Draw Hand: {:#?}", hand);
-    println!("After Draw: {:#?}", deck);
-
-    // Play the cards
-    for card_id in &hand {
-        let actions = state.play_player_card(active_player_id, card_id.clone());
-        for mut action in actions {
-            action(&mut state).unwrap();
-        }
-    }
-
-    // Discard the cards
-    for card_id in &hand {
-        state
-            .player_deck(active_player_id)
-            .unwrap()
-            .discard(card_id)
-            .unwrap();
-    }
-
-    println!(
-        "After Discard: {:#?}",
-        state.player_deck(active_player_id).unwrap()
-    );
-
-    // Cycle the Cards
-    state.player_deck(active_player_id).unwrap().cycle();
-
-    println!(
-        "After Cycle: {:#?}",
-        state.player_deck(active_player_id).unwrap()
-    );
-
-    // Draw three again
-    let deck = state.player_deck(active_player_id).unwrap();
-    let hand = deck.draw(3).unwrap();
-    println!("Hand: {:#?}", hand);
-    println!("After Second Draw: {:#?}", deck);
-
     // This is just my attempt to manage player order in the most basic way possible.
     // This is not at all the real input scheme. Just a few stupid commands to test some ideas
 
     // Run the game loop
-    // loop {
-    //     // TODO: I think this will start with Player 2
-    //     let active_player_id = match state.player_order_mut().next() {
-    //         None => {
-    //             // If we have finished this round, move to the next and start again
-    //             println!("Finished round: {}", state.round());
-    //             state.increment_round();
-    //             println!("Beginning round: {}", state.round());
-    //
-    //             continue;
-    //         }
-    //         Some(player_id) => player_id,
-    //     };
-    //
-    //     let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
-    //
-    //     println!("Active Player: {}", active_player.name());
-    //     println!("Acceptable commands: A-F");
-    //
-    //     loop {
-    //         print!("Enter command: ");
-    //         io::stdout().flush().unwrap();
-    //
-    //         let mut input = String::new();
-    //         io::stdin().read_line(&mut input).unwrap();
-    //         let input = input.trim();
-    //
-    //         let command: Commands = input.into();
-    //
-    //         match command {
-    //             Commands::A => {
-    //                 let me = false;
-    //
-    //                 let deck = active_player.deck();
-    //                 // Starting
-    //                 println!("{:#?}", deck);
-    //
-    //                 // Draw 3 cards
-    //                 let drawn = deck.draw(3).unwrap();
-    //                 println!("{:#?}", drawn);
-    //                 println!("{:#?}", deck);
-    //
-    //                 // Play those three cards and discard
-    //                 for card_id in drawn {
-    //                     deck.play(&card_id, &mut state).unwrap();
-    //                     // deck.discard(&card_id).unwrap()
-    //                 }
-    //
-    //                 // Check the ending
-    //                 println!("{:#?}", deck);
-    //             }
-    //             Commands::B => println!("Player '{}' entered command: B", active_player.name()),
-    //             Commands::C => println!("Player '{}' entered command: C", active_player.name()),
-    //             Commands::D => println!("Player '{}' entered command: D", active_player.name()),
-    //             Commands::E => println!("Player '{}' entered command: E", active_player.name()),
-    //             Commands::F => println!("Player '{}' entered command: F", active_player.name()),
-    //             Commands::Unknown => {
-    //                 println!("Invalid command. Please enter one of A-F");
-    //                 continue;
-    //             }
-    //         }
-    //
-    //         break;
-    //     }
-    // }
+    loop {
+        // TODO: I think this will start with Player 2
+        let active_player_id = match state.player_order_mut().next() {
+            None => {
+                // If we have finished this round, move to the next and start again
+                println!("Finished round: {}", state.round());
+                state.increment_round();
+                println!("Beginning round: {}", state.round());
+
+                continue;
+            }
+            Some(player_id) => player_id,
+        };
+
+        let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
+
+        println!("Active Player: {}", active_player.name());
+        println!("Acceptable commands: A-F");
+
+        loop {
+            print!("Enter command: ");
+            io::stdout().flush().unwrap();
+
+            let mut input = String::new();
+            io::stdin().read_line(&mut input).unwrap();
+            let input = input.trim();
+
+            let command: Commands = input.into();
+
+            match command {
+                Commands::A => {
+                    // Draw 3 cards
+                    println!("Player {} drew 3 cards", active_player.name());
+
+                    state
+                        .player_deck(active_player_id)
+                        .unwrap()
+                        .draw(3)
+                        .unwrap();
+
+                    println!(
+                        "After Draw: {:#?}",
+                        state.player_deck(active_player_id).unwrap()
+                    );
+                }
+                Commands::B => {
+                    println!("Player {} played 3 cards", active_player.name());
+                    let hand = state.player_deck(active_player_id).unwrap().hand();
+
+                    for card_id in hand.iter() {
+                        let actions = state.play_player_card(active_player_id, card_id.clone());
+                        for mut action in actions {
+                            action(&mut state).unwrap();
+                        }
+                    }
+
+                    // Discard the cards
+                    for card_id in hand.iter() {
+                        state
+                            .player_deck(active_player_id)
+                            .unwrap()
+                            .discard(card_id)
+                            .unwrap();
+                    }
+
+                    println!(
+                        "After Discard: {:#?}",
+                        state.player_deck(active_player_id).unwrap()
+                    );
+                }
+                Commands::C => {
+                    println!("Player {} cycled the cards", active_player.name());
+                    state.player_deck(active_player_id).unwrap().cycle();
+
+                    println!(
+                        "After Cycle: {:#?}",
+                        state.player_deck(active_player_id).unwrap()
+                    );
+                }
+                Commands::D => println!("Player '{}' entered command: D", active_player.name()),
+                Commands::E => println!("Player '{}' entered command: E", active_player.name()),
+                Commands::F => println!("Player '{}' entered command: F", active_player.name()),
+                Commands::Unknown => {
+                    println!("Invalid command. Please enter one of A-F");
+                    continue;
+                }
+            }
+
+            break;
+        }
+    }
 }

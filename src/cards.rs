@@ -6,7 +6,7 @@ pub mod discoveries;
 pub mod trinkets;
 pub mod wishes;
 
-enum Eligibility {
+pub enum Eligibility {
     Eligible,
     NotEligible,
     // What others?
