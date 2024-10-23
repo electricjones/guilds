@@ -47,28 +47,26 @@ fn main() {
         Cards::Trinket(Trinket::new("Merchant")),
     ]);
 
-    // Player::builder().name("Michael".into()).id(1).deck(michael_cards).build();
+    let james_card = PlayerDeck::from(vec![
+        Cards::Trinket(Trinket::new("Warrior2")),
+        Cards::Trinket(Trinket::new("Monk2")),
+        Cards::Trinket(Trinket::new("Cleric2")),
+        Cards::Trinket(Trinket::new("Minister2")),
+        Cards::Trinket(Trinket::new("Merchant2")),
+    ]);
 
-    // let james_card = PlayerDeck::from(vec![
-    //     Cards::Trinket(Trinket::new("Warrior2")),
-    //     Cards::Trinket(Trinket::new("Monk2")),
-    //     Cards::Trinket(Trinket::new("Cleric2")),
-    //     Cards::Trinket(Trinket::new("Minister2")),
-    //     Cards::Trinket(Trinket::new("Merchant2")),
-    // ]);
-    //
-    // let lori_cards = PlayerDeck::from(vec![
-    //     Cards::Trinket(Trinket::new("Warrior3")),
-    //     Cards::Trinket(Trinket::new("Monk3")),
-    //     Cards::Trinket(Trinket::new("Cleric3")),
-    //     Cards::Trinket(Trinket::new("Minister3")),
-    //     Cards::Trinket(Trinket::new("Merchant3")),
-    // ]);
+    let lori_cards = PlayerDeck::from(vec![
+        Cards::Trinket(Trinket::new("Warrior3")),
+        Cards::Trinket(Trinket::new("Monk3")),
+        Cards::Trinket(Trinket::new("Cleric3")),
+        Cards::Trinket(Trinket::new("Minister3")),
+        Cards::Trinket(Trinket::new("Merchant3")),
+    ]);
 
     let players = hashmap! {
         1 => Player::builder().name("Michael".into()).id(1).deck(michael_cards).build(),
-        // 2 => Player::builder().name("James".into()).id(2).deck(james_card).build(),
-        // 3 => Player::builder().name("Lori".into()).id(3).deck(lori_cards).build(),
+        2 => Player::builder().name("James".into()).id(2).deck(james_card).build(),
+        3 => Player::builder().name("Lori".into()).id(3).deck(lori_cards).build(),
     };
 
     // Initialize the state
@@ -83,27 +81,17 @@ fn main() {
 
     let active_player_id = 1;
 
-    // Borrow state to get the deck
-    let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
-    let deck = active_player.deck();
+    let deck = state.player_deck(active_player_id).unwrap();
     println!("Starting: {:#?}", deck);
 
     // Draw 3 cards
     let hand = deck.draw(3).unwrap();
-    println!("Hand: {:#?}", hand);
+    println!("First Draw Hand: {:#?}", hand);
     println!("After Draw: {:#?}", deck);
 
     // Play the cards
     for card_id in &hand {
-        let actions = state
-            .players()
-            .get_mut(&active_player_id)
-            .unwrap()
-            .deck()
-            .card(card_id)
-            .unwrap()
-            .play();
-
+        let actions = state.play_player_card(active_player_id, card_id.clone());
         for mut action in actions {
             action(&mut state).unwrap();
         }
@@ -112,33 +100,27 @@ fn main() {
     // Discard the cards
     for card_id in &hand {
         state
-            .players()
-            .get_mut(&active_player_id)
+            .player_deck(active_player_id)
             .unwrap()
-            .deck()
             .discard(card_id)
             .unwrap();
     }
 
-    let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
-    let deck = active_player.deck();
-    println!("Ending: {:#?}", deck);
+    println!(
+        "After Discard: {:#?}",
+        state.player_deck(active_player_id).unwrap()
+    );
 
     // Cycle the Cards
-    state
-        .players()
-        .get_mut(&active_player_id)
-        .unwrap()
-        .deck()
-        .cycle();
+    state.player_deck(active_player_id).unwrap().cycle();
 
-    let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
-    let deck = active_player.deck();
-    println!("Ending: {:#?}", deck);
+    println!(
+        "After Cycle: {:#?}",
+        state.player_deck(active_player_id).unwrap()
+    );
 
     // Draw three again
-    let active_player = &mut state.players().get_mut(&active_player_id).unwrap();
-    let deck = active_player.deck();
+    let deck = state.player_deck(active_player_id).unwrap();
     let hand = deck.draw(3).unwrap();
     println!("Hand: {:#?}", hand);
     println!("After Second Draw: {:#?}", deck);

@@ -12,7 +12,7 @@ enum Eligibility {
     // What others?
 }
 
-type PlayableAction = Box<dyn FnMut(&mut State) -> Result<String, String>>;
+pub type PlayableAction = Box<dyn FnMut(&mut State) -> Result<String, String>>;
 
 pub trait Playable {
     fn eligibility(&self, state: State) -> Eligibility;

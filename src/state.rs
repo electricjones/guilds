@@ -1,3 +1,5 @@
+use crate::cards::{Playable, PlayableAction};
+use crate::decks::player::PlayerDeck;
 use crate::state::players::{Player, PlayerId, PlayerOrder};
 use std::collections::HashMap;
 use typed_builder::TypedBuilder;
@@ -50,5 +52,21 @@ impl State {
 
     pub fn players(&mut self) -> &mut HashMap<PlayerId, Player> {
         &mut self.players
+    }
+}
+
+impl State {
+    pub fn player_deck(&mut self, player_id: PlayerId) -> Option<&mut PlayerDeck> {
+        Some(self.players().get_mut(&player_id).unwrap().deck())
+    }
+
+    pub fn play_player_card(&mut self, player_id: PlayerId, card_id: usize) -> Vec<PlayableAction> {
+        self.players()
+            .get_mut(&player_id)
+            .unwrap()
+            .deck()
+            .card(&card_id)
+            .unwrap()
+            .play()
     }
 }
